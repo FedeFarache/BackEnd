@@ -18,7 +18,8 @@ const addUser = async (email, name, lastname, password) => {
                 name: name,
                 lastname:lastname,
                 email: email,
-                password:cryptoPass
+                password:cryptoPass,
+                arregloIdPeluches
             }
         );
 

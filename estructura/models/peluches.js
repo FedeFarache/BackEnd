@@ -4,7 +4,6 @@ const { userInfo } = require('os');
 const Schema = mongoose.Schema;
 const pelucheSchema = new Schema({
     
-    _id: ObjectId(),
     animal:{
         type : String,
         required : true,
@@ -25,5 +24,5 @@ const pelucheSchema = new Schema({
 
 })
 
-const Usr = mongoose.model('Peluche',pelucheSchema);
+const Peluche = mongoose.model('peluche',pelucheSchema);
 module.exports = Peluche;

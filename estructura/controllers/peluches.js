@@ -1,5 +1,5 @@
 require('mongoose');
-const peluche = require ('../estructura/models/peluches');
+const peluche = require ('../models/peluches');
 
 const addPeluche = async (animal,color,accesorio) => {
     let existPeluche = await muneco.findOne({ animal : animal, color : color, accesorio : accesorio });
@@ -24,6 +24,7 @@ const addPeluche = async (animal,color,accesorio) => {
         return  { existPeluche };
     }
 }
+
 const getAllPeluches = async (limit,offset) => {
 
     const munecos = await peluche.find({}).limit(limit).skip(offset);
@@ -55,42 +56,3 @@ const deletePeluche = async(id) => {
 
 
 module.exports = { addPeluche, getAllPeluches, getPeluche, editPeluche, deletePeluche }
-
-// categorias
-
-app.get ("/categoria", (req,res) => {
-    let resultado = { '1':'Animal','2':'Color','3':'Accesorios'}
-    res.json ({'categorias': resultado})
-})
-
-// animales
-
-app.get ("/categoria/animal",(req,res) => {
-    let resultado = {'1': 'Perro',
-                     '2': 'Conejo',
-                     '3': 'Oso',
-                     '4': 'Mapache',
-                     '5': 'Gato'
-                    }
-    res.json ({'animal': resultado})
-})
-
-// color
-
-app.get ("/categoria/color",(req,res) => {
-    let resultado = {'1': 'Rosa',
-                     '2': 'Amarillo',
-                     '3': 'Verde',
-                    }
-    res.json ({'color': resultado})
-})
-
-// accesorio
-
-app.get ("//categoria/accesorio",(req,res) => {
-    let resultado = {'1': 'Camiseta y pelota de futbol',
-                     '2': 'Guitarra eléctrica',
-                     '3': 'Notebook',
-                    }
-    res.json ({'accesorio': resultado})
-})

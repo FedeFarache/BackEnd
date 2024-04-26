@@ -11,9 +11,10 @@ const PORT = process.env.PORT || 8050;
 
 
 const UsrController = require('./estructura/controllers/users');
+const PelucheController = require('./estructura/controllers/peluches');
 const AuthController = require('./estructura/controllers/auth');
 const Middleware = require('./estructura/middleware/auth-middleware');
-const MailController = require('./estructura/controllers/email');
+//const MailController = require('./estructura/controllers/email');
 
   app.use(express.json());
   app.use(cors());
@@ -108,7 +109,16 @@ app.post("/users",async (req,res) =>{
 // Login
 
 app.post("/login", async (req,res) =>{
-  let datos =  req.body;
+  let email =  req.body.email;
+  let password =  req.body.password;
+  try{
+    const datos = await AuthController.login(email,password);
+    res.status(200).json(datos);
+
+}catch(error){
+    res.status(500).send("Error. Intente mas tarde.")
+}
+ 
   console.log (datos);
   res.json({'respuesta' : 'Sesión iniciada'})
 
@@ -152,9 +162,9 @@ app.delete("/users/:id", async(req,res) =>{
 
 app.post("/peluches",async (req,res) =>{
     
-  let email = req.body.animal;
-  let name = req.body.color;
-  let lastname = req.body.accesorio;
+  let animal = req.body.animal;
+  let color = req.body.color;
+  let accesorio = req.body.accesorio;
   try{
     const result = await pelucheController.addPeluche(animal,color,accesorio);
     if(result){
@@ -168,6 +178,44 @@ app.post("/peluches",async (req,res) =>{
   
 });
 
+app.get ("/categoria", (req,res) => {
+  let resultado = { '1':'Animal','2':'Color','3':'Accesorios'}
+  res.json ({'categorias': resultado})
+})
+
+// animales
+
+app.get ("/categoria/animal",(req,res) => {
+  let resultado = {'1': 'Perro',
+                   '2': 'Conejo',
+                   '3': 'Oso',
+                   '4': 'Mapache',
+                   '5': 'Gato'
+                  }
+  res.json ({'animal': resultado})
+})
+
+// color
+
+app.get ("/categoria/color",(req,res) => {
+  let resultado = {'1': 'Rosa',
+                   '2': 'Amarillo',
+                   '3': 'Verde',
+                  }
+  res.json ({'color': resultado})
+})
+
+// accesorio
+
+app.get ("//categoria/accesorio",(req,res) => {
+  let resultado = {'1': 'Camiseta y pelota de futbol',
+                   '2': 'Guitarra eléctrica',
+                   '3': 'Notebook',
+                  }
+  res.json ({'accesorio': resultado})
+})
+
 http.listen(PORT, () => {
   console.log(`Listening to ${PORT}`);
 });
+

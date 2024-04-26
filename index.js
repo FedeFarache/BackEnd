@@ -113,15 +113,14 @@ app.post("/login", async (req,res) =>{
   let password =  req.body.password;
   try{
     const datos = await AuthController.login(email,password);
-    res.status(200).json(datos);
-
-}catch(error){
-    res.status(500).send("Error. Intente mas tarde.")
-}
- 
-  console.log (datos);
-  res.json({'respuesta' : 'Sesión iniciada'})
-
+    if(datos){
+      res.status(201).send("Sesion iniciada"); // 201
+    }else{
+      res.status(409).send("Datos incorrectos"); // 409
+    }  
+  }catch(error){
+    res.status(500).send("Error al iniciar sesion"); //500
+  }  
 })
 
 // Modificar un usuario

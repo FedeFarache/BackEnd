@@ -27,19 +27,13 @@ const client = new MongoClient(uri, {
     }
   }); 
 
-async function run() {
-    try {
-      // Connect the client to the server
-      await client.connect();
-      // Send a ping to confirm a successful connection
-      await client.db("admin").command({ ping: 1 });
-      console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    } finally {
-      // Ensures that the client will close when you finish/error
-      //await client.close();
-    }
-}
-run().catch(console.dir);
+
+mongoose
+.connect(uri, {})
+.then (() => {
+  console.log("Conectado");
+})
+.catch ((err) => console.log (err));
 
 
 /* llamada individual
@@ -47,9 +41,9 @@ app.get ("/remeras/:id", (req,res) =>{
     let { id = 0} = -
 })*/
 
-app.post("/",(req,res) => {
-    res.send("llamada post.");
-})
+app.get("/", (req, res) => {
+  res.status(200).json("Hola.");
+});
 
 //Get de todos los usuarios
 app.get("/users",Middleware.verify,async (req,res) =>{
@@ -86,29 +80,30 @@ app.get("/users/:id",async (req,res) =>{
 });
 
 // Crear un nuevo usuario
+app.post("/newUser",async (req,res) =>{
+    
+  let name = req.body.name;
+  let lastname = req.body.lastname;
+  let email = req.body.email;
+  let password = req.body.password;
 
-app.post("/users",async (req,res) =>{
-    
-    let email = req.body.email;
-    let name = req.body.name;
-    let lastname = req.body.lastname;
-    let password = req.body.password;
-    try{
-      const result = await UsrController.addUser(name,lastname,email,password);
-      if(result){
-        res.status(201).send("Usuario creado correctamente"); // 201
-      }else{
-        res.status(409).send("El usuario ya existe"); // 409
-      }  
-    }catch(error){
-      res.status(500).send("Error al crear el usuario."); //500
+  try{
+    const result = await UsrController.addUser(name,lastname,email,password);
+    if(result){
+      res.status(201).send("Usuario creado correctamente"); // 201
+    }else{
+      res.status(409).send("El usuario ya existe"); // 409
     }  
-    
+  }catch(error){
+    console.log(error);
+    res.status(500).send("Error al crear el usuario."); //500
+  }  
+  
 });
 
 // Login
 
-app.post("/login", async (req,res) =>{
+app.post("./login", async (req,res) =>{
   let email =  req.body.email;
   let password =  req.body.password;
   try{
@@ -125,7 +120,7 @@ app.post("/login", async (req,res) =>{
 
 // Modificar un usuario
 
-app.put("/users/:id",async (req,res) =>{
+app.put("./users/:id",async (req,res) =>{
 
     const user = { _id: req.params.id,name : req.body.name, lastname : req.body.lastname,email : req.body.email, password : req.body.password};
     try{
@@ -143,7 +138,7 @@ app.put("/users/:id",async (req,res) =>{
 });
 
 // Eliminar un usuario
-app.delete("/users/:id", async(req,res) =>{
+app.delete("./users/:id", async(req,res) =>{
 
     try{
 
@@ -206,7 +201,7 @@ app.get ("/categoria/color",(req,res) => {
 
 // accesorio
 
-app.get ("//categoria/accesorio",(req,res) => {
+app.get ("/categoria/accesorio",(req,res) => {
   let resultado = {'1': 'Camiseta y pelota de futbol',
                    '2': 'Guitarra eléctrica',
                    '3': 'Notebook',
@@ -214,7 +209,7 @@ app.get ("//categoria/accesorio",(req,res) => {
   res.json ({'accesorio': resultado})
 })
 
-http.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Listening to ${PORT}`);
 });
 

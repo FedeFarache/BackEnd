@@ -2,11 +2,12 @@ require('mongoose');
 const Usr = require ('../models/user');
 
 
-const addUser = async (email, name, lastname, password) => {
-
-    let existUser = await Usr.findOne({ email: email });
+const addUser = async (name, lastname, email, password) => {
+    
+    await Usr.findOne({ email: email });
+    let existUser = null;
     console.log(existUser);
-    if(!existUser) {
+    if(existUser==null) {
 
         const cryptoPass = require('crypto')
         .createHash('sha256')
@@ -14,12 +15,11 @@ const addUser = async (email, name, lastname, password) => {
         .digest('hex');
         
         const usr = new Usr(
-            {              
+            {
                 name: name,
                 lastname:lastname,
                 email: email,
                 password:cryptoPass,
-                arregloIdPeluches
             }
         );
 

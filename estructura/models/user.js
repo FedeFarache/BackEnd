@@ -23,8 +23,8 @@ const usrSchema = new Schema({
 	},
     arregloIdPeluches:{
 		type: Array,
-		required:true,
-        default: [null]
+		ref: 'peluches',
+        default: []
 	}
 }, 
 { timestamps: true } ).set('toJSON',{
